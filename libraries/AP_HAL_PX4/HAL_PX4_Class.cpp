@@ -11,6 +11,7 @@
 #include "UARTDriver.h"
 #include "Storage.h"
 #include "RCInput.h"
+#include "PWMInput.h"
 #include "RCOutput.h"
 #include "AnalogIn.h"
 #include "Util.h"
@@ -38,6 +39,7 @@ static Empty::EmptySPIDeviceManager spiDeviceManager;
 static PX4Scheduler schedulerInstance;
 static PX4Storage storageDriver;
 static PX4RCInput rcinDriver;
+static PX4PWMInput pwminDriver;
 static PX4RCOutput rcoutDriver;
 static PX4AnalogIn analogIn;
 static PX4Util utilInstance;
@@ -78,6 +80,7 @@ HAL_PX4::HAL_PX4() :
         &uartADriver, /* console */
         &gpioDriver, /* gpio */
         &rcinDriver,  /* rcinput */
+        &pwminDriver,
         &rcoutDriver, /* rcoutput */
         &schedulerInstance, /* scheduler */
         &utilInstance) /* util */
@@ -125,6 +128,7 @@ static int main_loop(int argc, char **argv)
     hal.uartE->begin(57600);
     hal.scheduler->init(NULL);
     hal.rcin->init(NULL);
+    hal.pwmin->init(NULL);
     hal.rcout->init(NULL);
     hal.analogin->init(NULL);
     hal.gpio->init();

@@ -23,6 +23,7 @@ namespace AP_HAL {
     class DigitalSource;
     class GPIO;
     class RCInput;
+    class PWMInput;
     class RCOutput;
     class Scheduler;
     class Semaphore;
