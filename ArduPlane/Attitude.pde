@@ -116,8 +116,8 @@ static void stick_mix_channel(RC_Channel *channel, int16_t &servo_out)
         
     ch_inf = (float)channel->radio_in - (float)channel->radio_trim;
     ch_inf = fabsf(ch_inf);
-    ch_inf = min(ch_inf, 400.0);
-    ch_inf = ((400.0 - ch_inf) / 400.0);
+    ch_inf = min(ch_inf, 400.0f);
+    ch_inf = ((400.0f - ch_inf) / 400.0f);
     servo_out *= ch_inf;
     servo_out += channel->pwm_to_angle();
 }
@@ -252,13 +252,13 @@ static void stabilize_training(float speed_scaler)
  */
 static void stabilize_acro(float speed_scaler)
 {
-    float roll_rate = (channel_roll->control_in/4500.0f) * g.acro_roll_rate;
-    float pitch_rate = (channel_pitch->control_in/4500.0f) * g.acro_pitch_rate;
+    float roll_rate; 
+    float pitch_rate; 
 
     /*
       check for special roll handling near the pitch poles
      */
-    if (g.acro_locking && roll_rate == 0) {
+    if (g.acro_locking && (channel_roll->control_in == 0)) {
         /*
           we have no roll stick input, so we will enter "roll locked"
           mode, and hold the roll we had when the stick was released
@@ -281,11 +281,12 @@ static void stabilize_acro(float speed_scaler)
           aileron stick is non-zero, use pure rate control until the
           user releases the stick
          */
+        roll_rate = (channel_roll->control_in/4500.0f) * g.acro_roll_rate;
         acro_state.locked_roll = false;
         channel_roll->servo_out  = rollController.get_rate_out(roll_rate,  speed_scaler);
     }
 
-    if (g.acro_locking && pitch_rate == 0) {
+    if (g.acro_locking && (channel_pitch->control_in == 0)) {
         /*
           user has zero pitch stick input, so we lock pitch at the
           point they release the stick
@@ -304,6 +305,7 @@ static void stabilize_acro(float speed_scaler)
         /*
           user has non-zero pitch input, use a pure rate controller
          */
+        pitch_rate = (channel_pitch->control_in/4500.0f) * g.acro_pitch_rate;
         acro_state.locked_pitch = false;
         channel_pitch->servo_out = pitchController.get_rate_out(pitch_rate, speed_scaler);
     }
@@ -346,7 +348,7 @@ static void stabilize()
      */
     if (channel_throttle->control_in == 0 &&
         relative_altitude_abs_cm() < 500 && 
-        fabs(barometer.get_climb_rate()) < 0.5f &&
+        fabs(barometer.get_climb_rate()) < 0.5 &&
         gps.ground_speed() < 3) {
         // we are low, with no climb rate, and zero throttle, and very
         // low ground speed. Zero the attitude controller
@@ -421,8 +423,8 @@ static void calc_nav_yaw_ground(void)
         return;
     }
 
-    float steer_rate = (channel_rudder->control_in/4500.0f) * g.ground_steer_dps;
-    if (steer_rate != 0) {
+    float steer_rate = 0;
+    if (channel_rudder->control_in != 0) {
         // pilot is giving rudder input
         steer_state.locked_course = false;        
     } else if (!steer_state.locked_course) {
@@ -432,6 +434,7 @@ static void calc_nav_yaw_ground(void)
     }
     if (!steer_state.locked_course) {
         // use a rate controller at the pilot specified rate
+        steer_rate = (channel_rudder->control_in/4500.0f) * g.ground_steer_dps;
         steering_control.steering = steerController.get_steering_out_rate(steer_rate);
     } else {
         // use a error controller on the summed error
@@ -513,7 +516,7 @@ static bool auto_takeoff_check(void)
 
     // Check for launch acceleration or timer started. NOTE: relies on TECS 50Hz processing
     if (!launchTimerStarted &&
-        g.takeoff_throttle_min_accel != 0.0 &&
+        g.takeoff_throttle_min_accel != 0.0f &&
         SpdHgt_Controller->get_VXdot() < g.takeoff_throttle_min_accel) {
         goto no_launch;
     }
@@ -523,7 +526,7 @@ static bool auto_takeoff_check(void)
         launchTimerStarted = true;
         last_tkoff_arm_time = now;
         gcs_send_text_fmt(PSTR("Armed AUTO, xaccel = %.1f m/s/s, waiting %.1f sec"), 
-                          SpdHgt_Controller->get_VXdot(), 0.1f*float(min(g.takeoff_throttle_delay,25)));
+                          SpdHgt_Controller->get_VXdot(), 0.1f*float(min((double) g.takeoff_throttle_delay,25)));
     }
 
     // Only perform velocity check if not timed out

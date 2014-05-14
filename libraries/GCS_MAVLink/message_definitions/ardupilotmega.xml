@@ -505,5 +505,12 @@
             <field type="int32_t" name="lat">Latitude in degrees * 1E7</field>
             <field type="int32_t" name="lng">Longitude in degrees * 1E7</field>
 	  </message>
+      
+      <message name="AERODYN_VARS" id="179">
+        <description>Aerodynamic variables</description>
+            <field type="float" name="alpha">Angle of attack (rad)</field>
+            <field type="float" name="airspeed">Airspeed (m/s)</field>
+            <field type="float" name="beta">Sideslip angle (rad)</field>
+      </message>
      </messages>
 </mavlink>
