@@ -22,6 +22,7 @@
 #include "Storage.h"
 #include "RCOutput.h"
 #include "RCInput.h"
+#include "PWMInput.h"
 
 using namespace PX4;
 
@@ -247,6 +248,9 @@ void *PX4Scheduler::_timer_thread(void)
 
         // process any pending RC input requests
         ((PX4RCInput *)hal.rcin)->_timer_tick();
+        
+        // Process PWM inputs
+        ((PX4PWMInput *)hal.pwmin)->_timer_tick();
     }
     return NULL;
 }

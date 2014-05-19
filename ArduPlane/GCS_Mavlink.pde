@@ -480,12 +480,12 @@ static void NOINLINE send_raw_imu1(mavlink_channel_t chan)
     mavlink_msg_raw_imu_send(
         chan,
         micros(),
-        accel.x * 1000.0 / GRAVITY_MSS,
-        accel.y * 1000.0 / GRAVITY_MSS,
-        accel.z * 1000.0 / GRAVITY_MSS,
-        gyro.x * 1000.0,
-        gyro.y * 1000.0,
-        gyro.z * 1000.0,
+        accel.x * 1000.0f / GRAVITY_MSS,
+        accel.y * 1000.0f / GRAVITY_MSS,
+        accel.z * 1000.0f / GRAVITY_MSS,
+        gyro.x * 1000.0f,
+        gyro.y * 1000.0f,
+        gyro.z * 1000.0f,
         mag.x,
         mag.y,
         mag.z);
@@ -564,6 +564,10 @@ static void NOINLINE send_ahrs(mavlink_channel_t chan)
         0,
         ahrs.get_error_rp(),
         ahrs.get_error_yaw());
+}
+
+static void NOINLINE send_aerodynamic_variables(mavlink_channel_t chan) {
+    mavlink_msg_aerodynamic_variables_send(chan,0,airspeed.get_airspeed(),0);
 }
 
 
@@ -810,6 +814,11 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
         CHECK_PAYLOAD_SIZE(WIND);
         send_wind(chan);
         break;
+        
+    case MSG_AERODYNAMIC_VARIABLES:
+        CHECK_PAYLOAD_SIZE(AERODYNAMIC_VARIABLES);
+        send_aerodynamic_variables(chan);
+        break;
 
     case MSG_RETRY_DEFERRED:
         break; // just here to prevent a warning
@@ -981,7 +990,7 @@ bool GCS_MAVLINK::stream_trigger(enum streams stream_num)
     // parameter sends
     if ((stream_num != STREAM_PARAMS) && 
         (waypoint_receiving || _queued_parameter != NULL)) {
-        rate *= 0.25;
+        rate *= 0.25f;
     }
 
     if (rate <= 0) {
@@ -1081,6 +1090,7 @@ GCS_MAVLINK::data_stream_send(void)
 
     if (stream_trigger(STREAM_EXTRA1)) {
         send_message(MSG_ATTITUDE);
+        send_message(MSG_AERODYNAMIC_VARIABLES);
         send_message(MSG_SIMSTATE);
     }
 

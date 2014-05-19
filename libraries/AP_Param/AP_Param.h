@@ -27,6 +27,7 @@
 #include <stdint.h>
 
 #include <AP_Progmem.h>
+//#include <AP_Math.h>
 
 #define AP_MAX_NAME_SIZE 16
 #define AP_NESTED_GROUPS_ENABLED
