@@ -168,6 +168,7 @@ public:
         k_param_curr_amp_offset,
         k_param_NavEKF,  // Extended Kalman Filter Inertial Navigation Group
         k_param_mission, // mission library
+        k_param_aoa,
 
         //
         // 150: Navigation parameters

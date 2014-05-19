@@ -22,6 +22,7 @@
 #include "Storage.h"
 #include "RCOutput.h"
 #include "RCInput.h"
+#include "PWMInput.h"
 #include <AP_Scheduler.h>
 
 using namespace PX4;
@@ -251,6 +252,9 @@ void *PX4Scheduler::_timer_thread(void)
 
         // process any pending RC input requests
         ((PX4RCInput *)hal.rcin)->_timer_tick();
+        
+        // Process PWM inputs
+        ((PX4PWMInput *)hal.pwmin)->_timer_tick();
 
         if (px4_ran_overtime && millis() - last_ran_overtime > 2000) {
             last_ran_overtime = millis();

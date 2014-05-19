@@ -977,7 +977,7 @@ const AP_Param::Info var_info[] PROGMEM = {
 
     // @Group: INS_
     // @Path: ../libraries/AP_InertialSensor/AP_InertialSensor.cpp
-    GOBJECT(ins,                    "INS_", AP_InertialSensor),
+    GOBJECT(ins,                    "INS_",     AP_InertialSensor),
 
     // @Group: AHRS_
     // @Path: ../libraries/AP_AHRS/AP_AHRS.cpp
@@ -985,7 +985,11 @@ const AP_Param::Info var_info[] PROGMEM = {
 
     // @Group: ARSPD_
     // @Path: ../libraries/AP_Airspeed/AP_Airspeed.cpp
-    GOBJECT(airspeed,                               "ARSPD_",   AP_Airspeed),
+    GOBJECT(airspeed,               "ARSPD_",   AP_Airspeed),
+    
+    // @Group: AOA_
+    // @Path: ../libraries/AP_AOA/AP_AOA.cpp
+    GOBJECT(aoa,                    "AOA_",     AP_AOA),
 
     // @Group: NAVL1_
     // @Path: ../libraries/AP_L1_Control/AP_L1_Control.cpp
