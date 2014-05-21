@@ -567,7 +567,7 @@ static void NOINLINE send_ahrs(mavlink_channel_t chan)
 }
 
 static void NOINLINE send_aerodynamic_variables(mavlink_channel_t chan) {
-    mavlink_msg_aerodynamic_variables_send(chan,0,airspeed.get_airspeed(),0);
+    mavlink_msg_aerodynamic_variables_send(chan,aoa.get_aoa_rad(),airspeed.get_airspeed(),0);
 }
 
 
@@ -1183,7 +1183,10 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
             set_mode(AUTO);
             result = MAV_RESULT_ACCEPTED;
             break;
-
+// Store pragma settings
+#pragma GCC diagnostic push
+            // Ignore using == for floats in this section
+#pragma GCC diagnostic ignored "-Wfloat-equals"
         case MAV_CMD_PREFLIGHT_CALIBRATION:
             if (packet.param1 == 1 ||
                 packet.param2 == 1) {
@@ -1291,11 +1294,12 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
         case MAV_CMD_PREFLIGHT_REBOOT_SHUTDOWN:
             if (packet.param1 == 1 || packet.param1 == 3) {
                 // when packet.param1 == 3 we reboot to hold in bootloader
-                hal.scheduler->reboot(packet.param1 == 3);
+                hal.scheduler->reboot(packet.param1 == 3.0f);
                 result = MAV_RESULT_ACCEPTED;
             }
             break;
-
+// Stop ignoring use of == for floats.
+#pragma GCC diagnostic pop
         case MAV_CMD_DO_FENCE_ENABLE:
             result = MAV_RESULT_ACCEPTED;
             
@@ -1464,8 +1468,8 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
             send_text_P(SEVERITY_LOW,PSTR("bad fence point"));
         } else {
             Vector2l point;
-            point.x = packet.lat*1.0e7;
-            point.y = packet.lng*1.0e7;
+            point.x = ((double) packet.lat) *1.0e7;
+            point.y = ((double) packet.lng) *1.0e7;
             set_fence_point_with_index(point, packet.idx);
         }
         break;

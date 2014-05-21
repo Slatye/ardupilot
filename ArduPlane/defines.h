@@ -126,7 +126,8 @@ enum log_messages {
     LOG_SONAR_MSG,
     LOG_COMPASS2_MSG,
     LOG_ARM_DISARM_MSG,
-    LOG_AIRSPEED_MSG
+    LOG_AIRSPEED_MSG,
+    LOG_AOA_MSG
 };
 
 #define MASK_LOG_ATTITUDE_FAST          (1<<0)
@@ -231,5 +232,7 @@ enum {
     ATT_CONTROL_PID = 0,
     ATT_CONTROL_APMCONTROL = 1
 };
+
+
 
 #endif // _DEFINES_H

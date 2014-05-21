@@ -724,6 +724,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { navigate,               5,   3000 },
     { update_compass,         5,   1200 },
     { read_airspeed,          5,   1200 },
+    { read_aoa,               5,   1200 },
     { update_alt,             5,   3400 },
     { calc_altitude_error,    5,   1000 },
     { obc_fs_check,           5,   1000 },
