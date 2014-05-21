@@ -29,22 +29,22 @@ public:
 
 
     //
-    float const get_aoa_rad(void) {
+    float get_aoa_rad(void) const {
         return _aoa;
     }
     
-    float const get_aoa_deg(void) {
+    float get_aoa_deg(void) const {
         return RAD2DEG(_aoa);
     }
 
 
     // return true if airspeed is enabled, and airspeed use is set
-    bool        use(void) const {
+    bool    use(void) const {
         return _enable && _use && _healthy;
     }
 
     // return true if airspeed is enabled
-    bool enabled(void) const {
+    bool    enabled(void) const {
         return _enable;
     }
 

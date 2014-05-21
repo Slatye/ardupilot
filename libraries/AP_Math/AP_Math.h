@@ -67,6 +67,13 @@
 // Eccentricity of the Earth
 #define WGS84_E (sqrt(2*WGS84_F - WGS84_F*WGS84_F))
 
+// Test if two floats are equal by treating them as integers.
+// This avoids the warning about comparing floats with == or !=
+// Guarantees that they're precisely equal - although this means that +0.0f and -0.0f are not equal.
+#define FLOATS_EQUAL(x,y) (*((uint32_t*)(&x)) == *((uint32_t*)(&y)))
+#define DOUBLES_EQUAL(x,y) (*((uint64_t*)(&x)) == *((uint64_t*)(&y)))
+#define FLOAT_EQUALS_INT(fl,in) ((
+
 // define AP_Param types AP_Vector3f and Ap_Matrix3f
 AP_PARAMDEFV(Matrix3f, Matrix3f, AP_PARAM_MATRIX3F);
 AP_PARAMDEFV(Vector3f, Vector3f, AP_PARAM_VECTOR3F);

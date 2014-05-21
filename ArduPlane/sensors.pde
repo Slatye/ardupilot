@@ -43,6 +43,15 @@ static void read_airspeed(void)
     }
 }
 
+static void read_aoa(void) {
+    if (aoa.enabled()) {
+        aoa.read();
+        if (should_log(MASK_LOG_IMU)) {
+            Log_Write_AOA();
+        }
+    }
+}
+
 static void zero_airspeed(void)
 {
     airspeed.calibrate();
