@@ -80,7 +80,7 @@ HAL_PX4::HAL_PX4() :
         &uartADriver, /* console */
         &gpioDriver, /* gpio */
         &rcinDriver,  /* rcinput */
-        &pwminDriver,
+        &pwminDriver, /* pwm input */
         &rcoutDriver, /* rcoutput */
         &schedulerInstance, /* scheduler */
         &utilInstance) /* util */
