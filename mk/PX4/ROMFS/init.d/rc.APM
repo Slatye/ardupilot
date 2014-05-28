@@ -275,9 +275,9 @@ then
     echo "Found ETS airspeed sensor"
 fi
 
-if hsc_airspeed start
+if meas_airspeed start
 then
-    echo "Found HSC airspeed sensor"
+    echo "Found MEAS airspeed sensor"
 fi
 
 echo "Trying PX4IO board"
