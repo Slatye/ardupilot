@@ -22,7 +22,7 @@ private:
     struct pwm_input_s _pwmin;
     int _pwmin_sub;
     uint64_t _last_read;
-    perf_counter_t _perf_pwmin;
+//    perf_counter_t _perf_pwmin;
     pthread_mutex_t pwmin_mutex;
 };
 

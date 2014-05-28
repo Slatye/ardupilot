@@ -58,15 +58,9 @@ const AP_Param::GroupInfo AP_AOA::var_info[] PROGMEM = {
 };
 
 
-/*
-  this scaling factor converts from the old system where we used a 
-  0 to 4095 raw ADC value for 0-5V to the new system which gets the
-  voltage in volts directly from the ADC driver
- */
-#define SCALING_OLD_CALIBRATION 819 // 4095/5
-
 void AP_AOA::init()
 {
+    backend.init(NULL);
     _aoa = 0;
 }
 
@@ -79,13 +73,13 @@ void AP_AOA::read(void)
     uint16_t period;
     
     backend.read(&timestamp, &errors, &pulse_width, &period);
-    
+    _aoa = (float) pulse_width;
     // See MA3 digital encoder specifications
     // http://www.usdigital.com/products/encoders/absolute/rotary/shaft/ma3
-    float tmp = (4098.0f * pulse_width) / period - 1;
-    tmp = (tmp <= 4094.0f) ? tmp : 4095.0f;
-    tmp *= 2.0f * PI / 4096.0f; // Convert to radians.
-    _aoa = tmp + _offset;
+  //  float tmp = (4098.0f * pulse_width) / period - 1;
+  //  tmp = (tmp <= 4094.0f) ? tmp : 4095.0f;
+  //  tmp *= 2.0f * PI / 4096.0f; // Convert to radians.
+  //  _aoa = tmp + _offset;
     _last_update_ms         = hal.scheduler->millis();
 }
 

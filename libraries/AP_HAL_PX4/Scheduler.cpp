@@ -226,6 +226,8 @@ void PX4Scheduler::_run_timers(bool called_from_timer_thread)
 
     // process analog input
     ((PX4AnalogIn *)hal.analogin)->_timer_tick();
+    
+  //  ((PX4PWMInput *)hal.pwmin)->_timer_tick();
 
     _in_timer_proc = false;
 }
@@ -248,9 +250,6 @@ void *PX4Scheduler::_timer_thread(void)
 
         // process any pending RC input requests
         ((PX4RCInput *)hal.rcin)->_timer_tick();
-        
-        // Process PWM inputs
-        ((PX4PWMInput *)hal.pwmin)->_timer_tick();
     }
     return NULL;
 }
