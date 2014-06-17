@@ -13,9 +13,7 @@ class PX4::PX4PWMInput : public AP_HAL::PWMInput {
 public:
     void init(void* unused);
     bool new_input();
-    void read(uint64_t * timestamp, uint64_t* errors, uint16_t * pulse_width, uint16_t * period);
-
-    void _timer_tick(void);
+    void read(uint64_t * timestamp, uint64_t* errors, uint32_t * pulse_width, uint32_t * period);
 
 private:
     /* override state */

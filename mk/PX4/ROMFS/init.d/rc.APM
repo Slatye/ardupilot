@@ -81,7 +81,7 @@ fi
 
 if uorb start
 then
-    echo "uorb started OK"
+    echo "uorb started OK" >> $logfile
 else
     sh /etc/init.d/rc.error
 fi
@@ -178,10 +178,10 @@ fi
 
 if [ $BOARD == FMUv1 -a $deviceD == /dev/ttyS1 ]
 then
-        echo "Setting FMU mode_serial"
-        fmu mode_serial
+        echo "Setting FMU mode_serial_pwmin" >> $logfile
+        fmu mode_serial_pwmin
 else
-        echo "Setting FMU mode_pwm"
+        echo "Setting FMU mode_pwm" >> $logfile
         fmu mode_pwm
 fi
 
@@ -189,14 +189,14 @@ fi
 echo "Starting APM sensors"
 if ms5611 start
 then
-    echo "ms5611 started OK"
+    echo "ms5611 started OK" >> $logfile
 else
     sh /etc/init.d/rc.error
 fi
 
 if adc start
 then
-    echo "adc started OK"
+    echo "adc started OK" >> $logfile
 else
     sh /etc/init.d/rc.error
 fi
@@ -310,12 +310,17 @@ fi
 # optional ETS airspeed sensor
 if ets_airspeed start
 then
-    echo "Found ETS airspeed sensor"
+    echo "Found ETS airspeed sensor" >> $logfile
 fi
 
 if meas_airspeed start
 then
-    echo "Found MEAS airspeed sensor"
+    echo "Found MEAS airspeed sensor" >> $logfile
+fi
+
+if pwm_input start
+then
+    echo "Found PWMIN sensor" >> $logfile
 fi
 
 echo "Trying PX4IO board"
