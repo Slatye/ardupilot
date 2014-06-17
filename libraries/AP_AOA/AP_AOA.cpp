@@ -69,17 +69,18 @@ void AP_AOA::read(void)
 {
     uint64_t timestamp;
     uint64_t errors; 
-    uint16_t pulse_width; 
-    uint16_t period;
+    uint32_t pulse_width; 
+    uint32_t period;
     
     backend.read(&timestamp, &errors, &pulse_width, &period);
-    _aoa = (float) pulse_width;
+ //   _aoa = (float) pulse_width;
     // See MA3 digital encoder specifications
     // http://www.usdigital.com/products/encoders/absolute/rotary/shaft/ma3
-  //  float tmp = (4098.0f * pulse_width) / period - 1;
-  //  tmp = (tmp <= 4094.0f) ? tmp : 4095.0f;
-  //  tmp *= 2.0f * PI / 4096.0f; // Convert to radians.
-  //  _aoa = tmp + _offset;
+    float tmp = (4098.0f * pulse_width) / period - 1;
+    tmp = (tmp <= 4094.0f) ? tmp : 4095.0f;
+    tmp *= 2.0f * PI / 4096.0f; // Convert to radians.
+    _aoa = tmp + _offset;
+//    _aoa = (pulse_width & 0x0000FFFF);
     _last_update_ms         = hal.scheduler->millis();
 }
 

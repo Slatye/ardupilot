@@ -1186,7 +1186,7 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 // Store pragma settings
 #pragma GCC diagnostic push
             // Ignore using == for floats in this section
-#pragma GCC diagnostic ignored "-Wfloat-equals"
+#pragma GCC diagnostic ignored "-Wfloat-equal"
         case MAV_CMD_PREFLIGHT_CALIBRATION:
             if (packet.param1 == 1 ||
                 packet.param2 == 1) {

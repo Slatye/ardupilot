@@ -15,7 +15,7 @@ public:
     virtual bool  new_input() = 0;
 
     /* Read a single channel at a time */
-    virtual void read(uint64_t * timestamp, uint64_t* errors, uint16_t * pulse_width, uint16_t * period) = 0;
+    virtual void read(uint64_t * timestamp, uint64_t* errors, uint32_t * pulse_width, uint32_t * period) = 0;
 
 
 };

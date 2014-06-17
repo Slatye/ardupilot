@@ -154,6 +154,9 @@ static void init_ardupilot()
 
     // initialise airspeed sensor
     airspeed.init();
+    
+    // Initialise angle of attack sensor
+    aoa.init();
 
     if (g.compass_enabled==true) {
         if (!compass.init() || !compass.read()) {
