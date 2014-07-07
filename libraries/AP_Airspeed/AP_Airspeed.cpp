@@ -62,6 +62,11 @@ extern const AP_HAL::HAL& hal;
  #define ARSPD_DEFAULT_PIN 0
 #endif
 
+
+// Pressure scale for the MS4525DO sensor, in counts/Pa.
+#define MS4525DO_SENSOR_SCALE ((0.8*16383)/(6894.8*2)) // 0.950, give or take
+#define HSCDRRN001ND_SENSOR_SCALE ((0.8*16383)/248.84*2)) // 27.7, give or take
+
 // table of user settable parameters
 const AP_Param::GroupInfo AP_Airspeed::var_info[] PROGMEM = {
 
@@ -106,6 +111,14 @@ const AP_Param::GroupInfo AP_Airspeed::var_info[] PROGMEM = {
     // @Description: This parameter allows you to control whether the order in which the tubes are attached to your pitot tube matters. If you set this to 0 then the top connector on the sensor needs to be the dynamic pressure. If set to 1 then the bottom connector needs to be the dynamic pressure. If set to 2 (the default) then the airspeed driver will accept either order. The reason you may wish to specify the order is it will allow your airspeed sensor to detect if the aircraft it receiving excessive pressure on the static port, which would otherwise be seen as a positive airspeed.
     // @User: Advanced
     AP_GROUPINFO("TUBE_ORDER",  6, AP_Airspeed, _tube_order, 2),
+    
+    
+    // @Param: SENSOR_SCALE
+    // @DisplayName: Control scaling of pressure sensor
+    // @Description: This parameter allows you to set custom scaling for the pressure sensor. Useful when using a sensor that isn't normally supported but has the same interface as the others (eg. MEAS sensors with different pressure ranges to the standard 1PSI MS4525DO that still connect to port 0x28). Units are Pascals per count, zero to use standard scaling for the sensor.
+    // @Increment: 0.1
+    // @User: Advanced
+    AP_GROUPINFO("SENS_SCALE", 7, AP_Airspeed, _sensor_scale, 0.0),
 
     AP_GROUPEND
 };
@@ -125,8 +138,8 @@ void AP_Airspeed::init()
     _last_saved_ratio = _ratio;
     _counter = 0;
     
-    analog.init();
-    digital.init();
+    analog.init(&_sensor_scale);
+    digital.init(&_sensor_scale);
 }
 
 // read the airspeed sensor
@@ -194,8 +207,9 @@ void AP_Airspeed::read(void)
     if (!_enable) {
         return;
     }
+    
+ //   _airspeed = get_pressure();
     airspeed_pressure = get_pressure() - _offset;
-
     /*
       we support different pitot tube setups so used can choose if
       they want to be able to detect pressure on the static port
