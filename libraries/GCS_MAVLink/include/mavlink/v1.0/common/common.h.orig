@@ -235,7 +235,7 @@ typedef enum MAV_SYS_STATUS_SENSOR
 	MAV_SYS_STATUS_SENSOR_ENUM_END=2097153, /*  | */
 =======
 	MAV_SYS_STATUS_SENSOR_ENUM_END=1048577, /*  | */
->>>>>>> added MAVLink message
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
 } MAV_SYS_STATUS_SENSOR;
 #endif
 
@@ -255,7 +255,7 @@ typedef enum MAV_FRAME
 	MAV_FRAME_ENUM_END=7, /*  | */
 =======
 	MAV_FRAME_ENUM_END=5, /*  | */
->>>>>>> added MAVLink message
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
 } MAV_FRAME;
 #endif
 
@@ -314,7 +314,7 @@ typedef enum MAV_MOUNT_MODE
 	MAV_MOUNT_MODE_ENUM_END=5, /*  | */
 } MAV_MOUNT_MODE;
 =======
->>>>>>> added MAVLink message
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
 #endif
 
 /** @brief Data stream IDs. A data stream is not a fixed set of messages, but rather a
@@ -498,7 +498,7 @@ typedef enum MAV_DISTANCE_SENSOR
 	MAV_DISTANCE_SENSOR_ENUM_END=2, /*  | */
 } MAV_DISTANCE_SENSOR;
 =======
->>>>>>> added MAVLink message
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
 #endif
 
 

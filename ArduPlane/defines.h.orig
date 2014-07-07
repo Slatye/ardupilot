@@ -131,7 +131,7 @@ enum log_messages {
     LOG_COMPASS3_MSG
 =======
     LOG_AOA_MSG
->>>>>>> AOA implemented, need to fix PX4 side
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
 };
 
 #define MASK_LOG_ATTITUDE_FAST          (1<<0)

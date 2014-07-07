@@ -430,12 +430,13 @@
       <message name="AERODYN_VARS" id="180">
 =======
       <message name="AERODYNAMIC_VARIABLES" id="179">
->>>>>>> Added AoA driver, should now be read in
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
         <description>Aerodynamic variables</description>
             <field type="float" name="alpha">Angle of attack (rad)</field>
             <field type="float" name="airspeed">Airspeed (m/s)</field>
             <field type="float" name="beta">Sideslip angle (rad)</field>
       </message>
+<<<<<<< HEAD
 
 
   <!-- camera event message from CCB to autopilot: for image trigger events but also things like heartbeat, error, low power, full card, etc -->
@@ -470,5 +471,7 @@
         <field name="flags"     type="uint8_t" >See CAMERA_FEEDBACK_FLAGS enum for definition of the bitmask</field> <!-- future proofing -->
     </message>
 
+=======
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
      </messages>
 </mavlink>

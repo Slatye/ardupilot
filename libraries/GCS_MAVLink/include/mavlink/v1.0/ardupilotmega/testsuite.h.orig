@@ -1508,7 +1508,7 @@ static void mavlink_test_ahrs2(uint8_t system_id, uint8_t component_id, mavlink_
 static void mavlink_test_camera_status(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
 =======
 static void mavlink_test_aerodynamic_variables(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
->>>>>>> Added AoA driver, should now be read in
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
 {
 	mavlink_message_t msg;
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
@@ -1516,11 +1516,6 @@ static void mavlink_test_aerodynamic_variables(uint8_t system_id, uint8_t compon
 <<<<<<< HEAD
 	mavlink_camera_status_t packet_in = {
 		93372036854775807ULL,
-=======
-	mavlink_aerodynamic_variables_t packet_in = {
-		17.0,
-	}45.0,
->>>>>>> Added AoA driver, should now be read in
 	}73.0,
 	}101.0,
 	}129.0,
@@ -1530,11 +1525,7 @@ static void mavlink_test_aerodynamic_variables(uint8_t system_id, uint8_t compon
 	}22,
 	}89,
 	};
-<<<<<<< HEAD
 	mavlink_camera_status_t packet1, packet2;
-=======
-	mavlink_aerodynamic_variables_t packet1, packet2;
->>>>>>> Added AoA driver, should now be read in
         memset(&packet1, 0, sizeof(packet1));
         	packet1.time_usec = packet_in.time_usec;
         	packet1.p1 = packet_in.p1;
@@ -1545,10 +1536,23 @@ static void mavlink_test_aerodynamic_variables(uint8_t system_id, uint8_t compon
         	packet1.target_system = packet_in.target_system;
         	packet1.cam_idx = packet_in.cam_idx;
         	packet1.event_id = packet_in.event_id;
+=======
+	mavlink_aerodynamic_variables_t packet_in = {
+		17.0,
+	}45.0,
+	}73.0,
+	};
+	mavlink_aerodynamic_variables_t packet1, packet2;
+        memset(&packet1, 0, sizeof(packet1));
+        	packet1.alpha = packet_in.alpha;
+        	packet1.airspeed = packet_in.airspeed;
+        	packet1.beta = packet_in.beta;
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
         
         
 
         memset(&packet2, 0, sizeof(packet2));
+<<<<<<< HEAD
 	mavlink_msg_camera_status_encode(system_id, component_id, &msg, &packet1);
 	mavlink_msg_camera_status_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
@@ -1561,6 +1565,20 @@ static void mavlink_test_aerodynamic_variables(uint8_t system_id, uint8_t compon
         memset(&packet2, 0, sizeof(packet2));
 	mavlink_msg_camera_status_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.time_usec , packet1.target_system , packet1.cam_idx , packet1.img_idx , packet1.event_id , packet1.p1 , packet1.p2 , packet1.p3 , packet1.p4 );
 	mavlink_msg_camera_status_decode(&msg, &packet2);
+=======
+	mavlink_msg_aerodynamic_variables_encode(system_id, component_id, &msg, &packet1);
+	mavlink_msg_aerodynamic_variables_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_aerodynamic_variables_pack(system_id, component_id, &msg , packet1.alpha , packet1.airspeed , packet1.beta );
+	mavlink_msg_aerodynamic_variables_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_aerodynamic_variables_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.alpha , packet1.airspeed , packet1.beta );
+	mavlink_msg_aerodynamic_variables_decode(&msg, &packet2);
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
@@ -1568,6 +1586,7 @@ static void mavlink_test_aerodynamic_variables(uint8_t system_id, uint8_t compon
         for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
         	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
         }
+<<<<<<< HEAD
 	mavlink_msg_camera_status_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
@@ -1616,7 +1635,6 @@ static void mavlink_test_camera_feedback(uint8_t system_id, uint8_t component_id
         
 
         memset(&packet2, 0, sizeof(packet2));
-<<<<<<< HEAD
 	mavlink_msg_camera_feedback_encode(system_id, component_id, &msg, &packet1);
 	mavlink_msg_camera_feedback_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
@@ -1629,20 +1647,6 @@ static void mavlink_test_camera_feedback(uint8_t system_id, uint8_t component_id
         memset(&packet2, 0, sizeof(packet2));
 	mavlink_msg_camera_feedback_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.time_usec , packet1.target_system , packet1.cam_idx , packet1.img_idx , packet1.lat , packet1.lng , packet1.alt_msl , packet1.alt_rel , packet1.roll , packet1.pitch , packet1.yaw , packet1.foc_len , packet1.flags );
 	mavlink_msg_camera_feedback_decode(&msg, &packet2);
-=======
-	mavlink_msg_aerodynamic_variables_encode(system_id, component_id, &msg, &packet1);
-	mavlink_msg_aerodynamic_variables_decode(&msg, &packet2);
-        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
-
-        memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_aerodynamic_variables_pack(system_id, component_id, &msg , packet1.alpha , packet1.airspeed , packet1.beta );
-	mavlink_msg_aerodynamic_variables_decode(&msg, &packet2);
-        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
-
-        memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_aerodynamic_variables_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.alpha , packet1.airspeed , packet1.beta );
-	mavlink_msg_aerodynamic_variables_decode(&msg, &packet2);
->>>>>>> Added AoA driver, should now be read in
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
@@ -1650,7 +1654,6 @@ static void mavlink_test_camera_feedback(uint8_t system_id, uint8_t component_id
         for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
         	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
         }
-<<<<<<< HEAD
 	mavlink_msg_camera_feedback_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
@@ -1664,7 +1667,7 @@ static void mavlink_test_camera_feedback(uint8_t system_id, uint8_t component_id
         memset(&packet2, 0, sizeof(packet2));
 	mavlink_msg_aerodynamic_variables_send(MAVLINK_COMM_1 , packet1.alpha , packet1.airspeed , packet1.beta );
 	mavlink_msg_aerodynamic_variables_decode(last_msg, &packet2);
->>>>>>> Added AoA driver, should now be read in
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
 
@@ -1703,7 +1706,7 @@ static void mavlink_test_ardupilotmega(uint8_t system_id, uint8_t component_id, 
 	mavlink_test_camera_feedback(system_id, component_id, last_msg);
 =======
 	mavlink_test_aerodynamic_variables(system_id, component_id, last_msg);
->>>>>>> Added AoA driver, should now be read in
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
 }
 
 #ifdef __cplusplus

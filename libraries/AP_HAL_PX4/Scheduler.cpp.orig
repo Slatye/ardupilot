@@ -23,7 +23,10 @@
 #include "RCOutput.h"
 #include "RCInput.h"
 #include "PWMInput.h"
+<<<<<<< HEAD
 #include <AP_Scheduler.h>
+=======
+>>>>>>> 962d543bb0c90a1b5207cce97f1bc6155d0b6481
 
 using namespace PX4;
 
@@ -228,7 +231,7 @@ void PX4Scheduler::_run_timers(bool called_from_timer_thread)
     // process analog input
     ((PX4AnalogIn *)hal.analogin)->_timer_tick();
     
-  //  ((PX4PWMInput *)hal.pwmin)->_timer_tick();
+
 
     _in_timer_proc = false;
 }
@@ -254,7 +257,6 @@ void *PX4Scheduler::_timer_thread(void)
 
         // process any pending RC input requests
         ((PX4RCInput *)hal.rcin)->_timer_tick();
-<<<<<<< HEAD
         
         // Process PWM inputs
         ((PX4PWMInput *)hal.pwmin)->_timer_tick();
@@ -264,8 +266,6 @@ void *PX4Scheduler::_timer_thread(void)
             printf("Overtime in task %d\n", (int)AP_Scheduler::current_task);
             hal.console->printf("Overtime in task %d\n", (int)AP_Scheduler::current_task);
         }
-=======
->>>>>>> implemented AOA but not working
     }
     return NULL;
 }
