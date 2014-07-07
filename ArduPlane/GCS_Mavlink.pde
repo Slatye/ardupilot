@@ -471,7 +471,11 @@ static void NOINLINE send_ahrs(mavlink_channel_t chan)
 }
 
 static void NOINLINE send_aerodynamic_variables(mavlink_channel_t chan) {
-    mavlink_msg_aerodynamic_variables_send(chan,aoa.get_aoa_rad(),airspeed.get_airspeed(),0);
+    if (airspeed.enabled()) {
+        mavlink_msg_aerodynamic_variables_send(chan,aoa.get_aoa_rad(),airspeed.get_airspeed(),1234);
+    } else {
+        mavlink_msg_aerodynamic_variables_send(chan,aoa.get_aoa_rad(),5678,1234);
+    }
 }
 
 
