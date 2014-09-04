@@ -17,6 +17,8 @@
  */
 
 #include <AP_HAL.h>
+#include <AP_HAL_Empty.h>
+#include <AP_HAL_Empty_Private.h>
 #if CONFIG_HAL_BOARD == HAL_BOARD_FLYMAPLE
 
 #include "HAL_FLYMAPLE_Class.h"
@@ -42,6 +44,8 @@ static FLYMAPLERCOutput rcoutDriver;
 static FLYMAPLEScheduler schedulerInstance;
 static FLYMAPLEUtil utilInstance;
 
+static Empty::EmptyPWMInput pwminDriver;
+
 HAL_FLYMAPLE::HAL_FLYMAPLE() :
     AP_HAL::HAL(
         &uartADriver,
@@ -50,16 +54,17 @@ HAL_FLYMAPLE::HAL_FLYMAPLE() :
         NULL,            /* no uartD */
         NULL,            /* no uartE */
         &i2cDriver,
-	&spiDeviceManager,
-	&analogIn,
-	&storageDriver,
+        &spiDeviceManager,
+        &analogIn,
+        &storageDriver,
         &uartADriver,
-	&gpioDriver,
-	&rcinDriver,
-	&rcoutDriver,
+        &gpioDriver,
+        &rcinDriver,
+        &pwminDriver,
+        &rcoutDriver,
         &schedulerInstance,
-	&utilInstance
-	)
+        &utilInstance
+    )
 {}
 
 void HAL_FLYMAPLE::init(int argc,char* const argv[]) const {

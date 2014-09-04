@@ -33,6 +33,7 @@ using namespace VRBRAIN;
 static Empty::EmptySemaphore  i2cSemaphore;
 static Empty::EmptyI2CDriver  i2cDriver(&i2cSemaphore);
 static Empty::EmptySPIDeviceManager spiDeviceManager;
+static Empty::EmptyPWMInput pwminDriver;
 //static Empty::EmptyGPIO gpioDriver;
 
 static VRBRAINScheduler schedulerInstance;
@@ -110,6 +111,7 @@ HAL_VRBRAIN::HAL_VRBRAIN() :
         &uartADriver, /* console */
         &gpioDriver, /* gpio */
         &rcinDriver,  /* rcinput */
+        &pwminDriver, /* pwminput */
         &rcoutDriver, /* rcoutput */
         &schedulerInstance, /* scheduler */
         &utilInstance) /* util */

@@ -15,9 +15,13 @@
 #include "AnalogIn.h"
 #include "Util.h"
 #include "GPIO.h"
+#include "PWMInput.h"
+
 
 #include <AP_HAL_Empty.h>
 #include <AP_HAL_Empty_Private.h>
+
+
 
 #include <stdlib.h>
 #include <systemlib/systemlib.h>
@@ -33,7 +37,6 @@ using namespace PX4;
 static Empty::EmptySemaphore  i2cSemaphore;
 static Empty::EmptyI2CDriver  i2cDriver(&i2cSemaphore);
 static Empty::EmptySPIDeviceManager spiDeviceManager;
-//static Empty::EmptyGPIO gpioDriver;
 
 static PX4Scheduler schedulerInstance;
 static PX4Storage storageDriver;
@@ -42,6 +45,8 @@ static PX4RCOutput rcoutDriver;
 static PX4AnalogIn analogIn;
 static PX4Util utilInstance;
 static PX4GPIO gpioDriver;
+static PX4PWMInput pwminDriver;
+
 
 #if defined(CONFIG_ARCH_BOARD_PX4FMU_V2)
 #define UARTA_DEFAULT_DEVICE "/dev/ttyACM0"
@@ -78,6 +83,7 @@ HAL_PX4::HAL_PX4() :
         &uartADriver, /* console */
         &gpioDriver, /* gpio */
         &rcinDriver,  /* rcinput */
+        &pwminDriver, /* pwminput */
         &rcoutDriver, /* rcoutput */
         &schedulerInstance, /* scheduler */
         &utilInstance) /* util */
@@ -125,6 +131,7 @@ static int main_loop(int argc, char **argv)
     hal.uartE->begin(57600);
     hal.scheduler->init(NULL);
     hal.rcin->init(NULL);
+    hal.pwmin->init(NULL);
     hal.rcout->init(NULL);
     hal.analogin->init(NULL);
     hal.gpio->init();

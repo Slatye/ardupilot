@@ -18,6 +18,7 @@ namespace Empty {
     class EmptyGPIO;
     class EmptyDigitalSource;
     class EmptyRCInput;
+    class EmptyPWMInput;
     class EmptyRCOutput;
     class EmptySemaphore;
     class EmptyScheduler;
