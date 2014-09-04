@@ -22,6 +22,7 @@
 #include "Storage.h"
 #include "RCOutput.h"
 #include "RCInput.h"
+#include "PWMInput.h"
 #include <AP_Scheduler.h>
 
 using namespace PX4;

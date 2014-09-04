@@ -9,6 +9,8 @@
 #include <AP_HAL_AVR.h>
 #include "AP_HAL_AVR_private.h"
 #include "HAL_AVR_APM1_Class.h"
+#include <AP_HAL_Empty.h>
+#include <AP_HAL_Empty_Private.h>
 
 using namespace AP_HAL;
 using namespace AP_HAL_AVR;
@@ -32,6 +34,8 @@ static APM1RCOutput     apm1RCOutput;
 static AVRScheduler     avrScheduler;
 static AVRUtil          avrUtil;
 
+static Empty::EmptyPWMInput apm1PWMInput;
+
 static ISRRegistry isrRegistry;
 
 /* On APM1 the physical UART2 is used for SPI. */
@@ -49,6 +53,7 @@ HAL_AVR_APM1::HAL_AVR_APM1() :
         &avrUart0Driver,
         &avrGPIO,
         &apm1RCInput,
+        &apm1PWMInput,
         &apm1RCOutput,
         &avrScheduler,
         &avrUtil )

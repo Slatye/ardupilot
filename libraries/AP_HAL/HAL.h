@@ -11,6 +11,7 @@
 #include "../AP_HAL/GPIO.h"
 #include "../AP_HAL/RCInput.h"
 #include "../AP_HAL/RCOutput.h"
+#include "../AP_HAL/PWMInput.h"
 
 class AP_HAL::HAL {
 public:
@@ -26,6 +27,7 @@ public:
         AP_HAL::UARTDriver* _console,
         AP_HAL::GPIO*       _gpio,
         AP_HAL::RCInput*    _rcin,
+        AP_HAL::PWMInput*   _pwmin,
         AP_HAL::RCOutput*   _rcout,
         AP_HAL::Scheduler*  _scheduler,
         AP_HAL::Util*       _util)
@@ -42,6 +44,7 @@ public:
         console(_console),
         gpio(_gpio),
         rcin(_rcin),
+        pwmin(_pwmin),
         rcout(_rcout),
         scheduler(_scheduler),
         util(_util)
@@ -61,6 +64,7 @@ public:
     AP_HAL::UARTDriver* console;
     AP_HAL::GPIO*       gpio;
     AP_HAL::RCInput*    rcin;
+    AP_HAL::PWMInput*   pwmin;
     AP_HAL::RCOutput*   rcout;
     AP_HAL::Scheduler*  scheduler;
     AP_HAL::Util*       util;

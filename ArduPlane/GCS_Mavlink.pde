@@ -451,6 +451,15 @@ static void NOINLINE send_wind(mavlink_channel_t chan)
         wind.z);
 }
 
+static void NOINLINE send_aerodynamic_variables(mavlink_channel_t chan)
+{
+    mavlink_msg_aerodynamic_variables_send(
+        chan,
+        aoa.get_aoa_rad(),
+        0,
+        airspeed.get_airspeed());
+}
+
 static void NOINLINE send_rangefinder(mavlink_channel_t chan)
 {
     if (!rangefinder.healthy()) {
@@ -668,6 +677,11 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
     case MSG_WIND:
         CHECK_PAYLOAD_SIZE(WIND);
         send_wind(chan);
+        break;
+        
+    case MSG_AERODYNAMIC_VARIABLES:
+        CHECK_PAYLOAD_SIZE(AERODYNAMIC_VARIABLES);
+        send_aerodynamic_variables(chan);
         break;
 
     case MSG_MOUNT_STATUS:
@@ -888,6 +902,7 @@ GCS_MAVLINK::data_stream_send(void)
 
     if (stream_trigger(STREAM_EXTRA1)) {
         send_message(MSG_ATTITUDE);
+        send_message(MSG_AERODYNAMIC_VARIABLES);
         send_message(MSG_SIMSTATE);
     }
 

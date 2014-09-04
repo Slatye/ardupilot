@@ -79,6 +79,8 @@ static Empty::EmptyRCOutput rcoutDriver;
 static LinuxScheduler schedulerInstance;
 static LinuxUtil utilInstance;
 
+static Empty::EmptyPWMInput pwminDriver;
+
 HAL_Linux::HAL_Linux() :
     AP_HAL::HAL(
         &uartADriver,
@@ -93,6 +95,7 @@ HAL_Linux::HAL_Linux() :
         &uartADriver,
         &gpioDriver,
         &rcinDriver,
+        &pwminDriver,
         &rcoutDriver,
         &schedulerInstance,
         &utilInstance)

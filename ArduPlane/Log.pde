@@ -535,6 +535,22 @@ static void Log_Write_Airspeed(void)
     DataFlash.WriteBlock(&pkt, sizeof(pkt));
 }
 
+struct PACKED log_AOA {
+    LOG_PACKET_HEADER;
+    uint32_t timestamp;
+    float   aoa;
+};
+
+static void Log_Write_AOA(void)
+{
+    struct log_AOA pkt = {
+        LOG_PACKET_HEADER_INIT(LOG_AOA_MSG),
+        timestamp : hal.scheduler->millis(),
+        aoa       : aoa.get_aoa_rad()
+    };
+    DataFlash.WriteBlock(&pkt, sizeof(pkt));
+}
+
 static const struct LogStructure log_structure[] PROGMEM = {
     LOG_COMMON_STRUCTURES,
     { LOG_ATTITUDE_MSG, sizeof(log_Attitude),       
@@ -560,6 +576,8 @@ static const struct LogStructure log_structure[] PROGMEM = {
     { LOG_ARM_DISARM_MSG, sizeof(log_Arm_Disarm),
       "ARM", "IHB", "TimeMS,ArmState,ArmChecks" },
     { LOG_AIRSPEED_MSG, sizeof(log_AIRSPEED),
+    { LOG_AOA_MSG, sizeof(log_AOA),
+      "AOA", "If", "TimeMS,AOA" },
       "ARSP",  "Iffcff",   "TimeMS,Airspeed,DiffPress,Temp,RawPress,Offset" },
     { LOG_ATRP_MSG, sizeof(AP_AutoTune::log_ATRP),
       "ATRP", "IBBcfff",  "TimeMS,Type,State,Servo,Demanded,Achieved,P" },

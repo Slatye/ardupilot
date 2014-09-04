@@ -17,6 +17,7 @@ static EmptyAnalogIn analogIn;
 static EmptyStorage storageDriver;
 static EmptyGPIO gpioDriver;
 static EmptyRCInput rcinDriver;
+static EmptyPWMInput pwminDriver;
 static EmptyRCOutput rcoutDriver;
 static EmptyScheduler schedulerInstance;
 static EmptyUtil utilInstance;
@@ -35,6 +36,7 @@ HAL_Empty::HAL_Empty() :
         &uartADriver,
         &gpioDriver,
         &rcinDriver,
+        &pwminDriver,
         &rcoutDriver,
         &schedulerInstance,
         &utilInstance),

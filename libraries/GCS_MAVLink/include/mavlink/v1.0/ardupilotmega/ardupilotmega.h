@@ -252,6 +252,7 @@ typedef enum CAMERA_FEEDBACK_FLAGS
 #include "./mavlink_msg_camera_status.h"
 #include "./mavlink_msg_camera_feedback.h"
 #include "./mavlink_msg_battery2.h"
+#include "./mavlink_msg_aerodynamic_variables.h"
 
 #ifdef __cplusplus
 }

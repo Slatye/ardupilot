@@ -10,6 +10,9 @@
 #include "AP_HAL_AVR_private.h"
 #include "HAL_AVR_APM2_Class.h"
 
+#include <AP_HAL_Empty.h>
+#include <AP_HAL_Empty_Private.h>
+
 using namespace AP_HAL;
 using namespace AP_HAL_AVR;
 
@@ -32,6 +35,8 @@ static APM2RCOutput     apm2RCOutput;
 static AVRScheduler     avrScheduler;
 static AVRUtil          avrUtil;
 
+static Empty::EmptyPWMInput apm2PWMInput;
+
 static ISRRegistry isrRegistry;
 
 HAL_AVR_APM2::HAL_AVR_APM2() :
@@ -48,6 +53,7 @@ HAL_AVR_APM2::HAL_AVR_APM2() :
         &avrUart0Driver,
         &avrGPIO,
         &apm2RCInput,
+        &apm2PWMInput,
         &apm2RCOutput,
         &avrScheduler,
         &avrUtil )

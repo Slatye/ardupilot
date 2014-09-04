@@ -465,5 +465,12 @@
       <field type="int16_t" name="current_battery">Battery current, in 10*milliamperes (1 = 10 milliampere), -1: autopilot does not measure the current</field>
     </message>
 
+    <message name="AERODYNAMIC_VARIABLES" id="182">
+      <description>Aerodynamic variables</description>
+      <field type="float" name="alpha">Angle of attack (rad)</field>
+      <field type="float" name="beta">Sideslip angle (rad)</field>
+      <field type="float" name="airspeed">Airspeed (m/s)</field>
+    </message>
+
      </messages>
 </mavlink>

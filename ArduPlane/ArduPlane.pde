@@ -53,6 +53,7 @@
 #include <AP_Camera.h>          // Photo or video camera
 #include <AP_Airspeed.h>
 #include <AP_Terrain.h>
+#include <AP_AOA.h>
 
 #include <APM_OBC.h>
 #include <APM_Control.h>
@@ -469,6 +470,11 @@ static AP_Frsky_Telem frsky_telemetry(ahrs, battery);
 AP_Airspeed airspeed(aparm);
 
 ////////////////////////////////////////////////////////////////////////////////
+// Angle of attack sensor
+////////////////////////////////////////////////////////////////////////////////
+AP_AOA aoa(aparm);
+
+////////////////////////////////////////////////////////////////////////////////
 // ACRO controller state
 ////////////////////////////////////////////////////////////////////////////////
 static struct {
@@ -787,6 +793,7 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { navigate,               5,   3000 },
     { update_compass,         5,   1200 },
     { read_airspeed,          5,   1200 },
+    { read_aoa,               5,   1200 },
     { update_alt,             5,   3400 },
     { adjust_altitude_target, 5,   1000 },
     { obc_fs_check,           5,   1000 },
