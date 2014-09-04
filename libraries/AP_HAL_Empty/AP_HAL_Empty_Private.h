@@ -13,6 +13,7 @@
 #include "Storage.h"
 #include "GPIO.h"
 #include "RCInput.h"
+#include "PWMInput.h"
 #include "RCOutput.h"
 #include "Semaphores.h"
 #include "Scheduler.h"

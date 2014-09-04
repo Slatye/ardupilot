@@ -180,7 +180,7 @@ fi
 
 if [ $BOARD == FMUv1 -a $deviceD == /dev/ttyS1 ]
 then
-        echo "Setting FMU mode_serial"
+        echo "Setting FMU mode_serial_pwmin"
         fmu mode_serial
 else
         echo "Setting FMU mode_pwm"
@@ -318,6 +318,11 @@ fi
 if meas_airspeed start
 then
     echo "Found MEAS airspeed sensor"
+fi
+
+if pwm_input start
+then
+    echo "Found PWMIN sensor"
 fi
 
 # optional Range Finder sensor
