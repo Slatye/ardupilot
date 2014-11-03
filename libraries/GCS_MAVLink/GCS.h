@@ -50,6 +50,7 @@ enum ap_message {
     MSG_TERRAIN,
     MSG_BATTERY2,
     MSG_AERODYNAMIC_VARIABLES,
+    MSG_SYSTEM_STATE,
     MSG_RETRY_DEFERRED // this must be last
 };
 
