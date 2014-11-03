@@ -67,13 +67,9 @@ fi
 
 if [ $BOARD == FMUv1 ]
 then
-   set deviceC /dev/ttyS2
-   if [ -f /fs/microsd/APM/AUXPWM.en ]
-   then
-      set deviceD /dev/null
-   else
-      set deviceD /dev/ttyS1
-   fi
+   set deviceC /dev/ttyS1
+   set deviceD /dev/ttyS0
+   set deviceE /dev/ttyS2
 else
    set deviceC /dev/ttyS1
    set deviceD /dev/ttyS2
@@ -178,14 +174,9 @@ else
     fi
 fi
 
-if [ $BOARD == FMUv1 -a $deviceD == /dev/ttyS1 ]
-then
-        echo "Setting FMU mode_serial_pwmin"
-        fmu mode_serial
-else
-        echo "Setting FMU mode_pwm"
-        fmu mode_pwm
-fi
+echo "Setting FMU mode_serial_pwmin"
+fmu mode_serial
+
 
 
 echo "Starting APM sensors"
@@ -341,6 +332,8 @@ then
     echo "Found mb12xx sensor"
 fi
 
+echo "Trying PX4IO board"
+
 if mtd start /fs/mtd
 then
     echo "started mtd driver OK"
@@ -376,7 +369,7 @@ then
 fi
 
 echo Starting ArduPilot $deviceA $deviceC $deviceD
-if ArduPilot -d $deviceA -d2 $deviceC -d3 $deviceD start
+if ArduPilot -d $deviceA -d2 $deviceC -d3 $deviceD -d4 $deviceE start
 then
     echo ArduPilot started OK
 else
