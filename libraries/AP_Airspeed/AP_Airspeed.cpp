@@ -203,6 +203,8 @@ void AP_Airspeed::calibrate()
 void AP_Airspeed::read(void)
 {
     float airspeed_pressure;
+    uint32_t curr_update_ms = hal.scheduler->millis();
+    uint32_t raw_airspeed_old = _raw_airspeed;
     if (!_enable) {
         return;
     }
@@ -231,6 +233,8 @@ void AP_Airspeed::read(void)
     airspeed_pressure       = max(airspeed_pressure, 0);
     _last_pressure          = airspeed_pressure;
     _raw_airspeed           = sqrtf(airspeed_pressure * _ratio);
+    _raw_airspeed_acc       = (_raw_airspeed - raw_airspeed_old) * 1000.0f / (curr_update_ms - _last_update_ms);
+    _airspeed_acc           = 0.7f * _airspeed_acc + 0.3f * _raw_airspeed_acc;
     _airspeed               = 0.7f * _airspeed  +  0.3f * _raw_airspeed;
     _last_update_ms         = hal.scheduler->millis();
 }
