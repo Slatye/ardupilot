@@ -69,6 +69,10 @@ public:
     float           get_airspeed(void) const {
         return _airspeed;
     }
+    
+    float           get_airspeed_acc(void) const {
+        return _airspeed_acc;
+    }
 
     // return the unfiltered airspeed in m/s
     float           get_raw_airspeed(void) const {
@@ -160,7 +164,9 @@ private:
     AP_Int8         _autocal;
     AP_Int8         _tube_order;
     float           _raw_airspeed;
+    float           _raw_airspeed_acc;
     float           _airspeed;
+    float           _airspeed_acc;
     float			_last_pressure;
     float           _EAS2TAS;
     bool		    _healthy:1;
