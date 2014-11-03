@@ -446,8 +446,28 @@ static void NOINLINE send_aerodynamic_variables(mavlink_channel_t chan)
     mavlink_msg_aerodynamic_variables_send(
         chan,
         aoa.get_aoa_rad(),
-        0,
-        airspeed.get_airspeed());
+        0.0f,
+        airspeed.get_airspeed(),
+        airspeed.get_airspeed_acc(),
+        barometer.get_temperature(),
+        barometer.get_pressure());
+}
+
+static void NOINLINE send_system_state(mavlink_channel_t chan) 
+{
+    if (hal.util->safety_switch_state() == AP_HAL::Util::SAFETY_DISARMED) {
+        terrain_following_optflow.int_state = TERRAIN_FOLLOWING_OPTFLOW_SYSTEM_DISARMED;
+    } else if (terrain_following_optflow.int_state == 0x03) {
+        terrain_following_optflow.int_state = TERRAIN_FOLLOWING_OPTFLOW_OFF;
+    }
+    // No data for five seconds = error.
+    if (millis() - terrain_following_optflow.heartbeat > 5000) {
+        terrain_following_optflow.ext_state = TERRAIN_FOLLOWING_OPTFLOW_EXT_ERROR;
+    }
+    mavlink_msg_system_state_send(
+        chan,
+        ((terrain_following_optflow.ext_state & 0x03) << 2) 
+        | (terrain_following_optflow.int_state & 0x03));
 }
 
 static void NOINLINE send_rangefinder(mavlink_channel_t chan)
@@ -666,6 +686,11 @@ bool GCS_MAVLINK::try_send_message(enum ap_message id)
         CHECK_PAYLOAD_SIZE(AERODYNAMIC_VARIABLES);
         send_aerodynamic_variables(chan);
         break;
+        
+    case MSG_SYSTEM_STATE:
+        CHECK_PAYLOAD_SIZE(SYSTEM_STATE);
+        send_system_state(chan);
+        break;
 
     case MSG_RETRY_DEFERRED:
         break; // just here to prevent a warning
@@ -879,6 +904,7 @@ GCS_MAVLINK::data_stream_send(void)
     if (stream_trigger(STREAM_EXTRA1)) {
         send_message(MSG_ATTITUDE);
         send_message(MSG_AERODYNAMIC_VARIABLES);
+        send_message(MSG_SYSTEM_STATE);
         send_message(MSG_SIMSTATE);
     }
 
@@ -1409,7 +1435,47 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
         failsafe.last_heartbeat_ms = millis();
         break;
     }
+    
+    case MAVLINK_MSG_ID_PITCH_DEMAND:
+    {
+        static uint32_t last_ack = 0;
+        uint8_t state_changed = 0;
+        uint32_t this_ack = millis();
+        mavlink_pitch_demand_t packet;
+        mavlink_msg_pitch_demand_decode(msg, &packet);
 
+        terrain_following_optflow.sequence = packet.number;
+        if (packet.quality != 0) {
+            terrain_following_optflow.pitch_demand = (int32_t) (packet.pitch * 180/3.14159 * 100);
+            terrain_following_optflow.timestamp = this_ack;
+            if ((terrain_following_optflow.int_state == TERRAIN_FOLLOWING_OPTFLOW_ARMED) &&
+               ((terrain_following_optflow.ext_state == TERRAIN_FOLLOWING_OPTFLOW_EXT_ON) ||
+                (terrain_following_optflow.ext_state == TERRAIN_FOLLOWING_OPTFLOW_EXT_READY))) {
+                terrain_following_optflow.int_state = TERRAIN_FOLLOWING_OPTFLOW_ON;
+                state_changed = 1;
+            }
+        }
+        
+        if ((state_changed) || (this_ack - last_ack > 500)) {
+            mavlink_msg_pitch_demand_ack_send_buf(
+                msg,
+                chan,
+                packet.number,
+                terrain_following_optflow.int_state);
+            last_ack = this_ack;
+        }
+        break;
+    }
+    
+    case MAVLINK_MSG_ID_SYSTEM_STATE:
+    {
+        mavlink_system_state_t packet;
+        mavlink_msg_system_state_decode(msg, &packet);
+        terrain_following_optflow.heartbeat = millis();
+        terrain_following_optflow.ext_state = (packet.state & 0x0C) >> 2; // Remove the last two bits, which are PX4 state.
+        break;
+    }
+    
 #if HIL_MODE != HIL_MODE_DISABLED
     case MAVLINK_MSG_ID_HIL_STATE:
     {

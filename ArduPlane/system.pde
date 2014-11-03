@@ -160,15 +160,6 @@ static void init_ardupilot()
     // initialise angle of attack sensor
     aoa.init();
 
-    // initialise angle of attack sensor
-    aoa.init();
-
-    // initialise angle of attack sensor
-    aoa.init();
-
-    // initialise angle of attack sensor
-    aoa.init();
-
     if (g.compass_enabled==true) {
         if (!compass.init() || !compass.read()) {
             cliSerial->println_P(PSTR("Compass initialisation failed!"));
@@ -333,6 +324,7 @@ static void set_mode(enum FlightMode mode)
 
     // disable taildrag takeoff on mode change
     auto_state.fbwa_tdrag_takeoff_mode = false;
+    terrain_following_optflow.int_state = TERRAIN_FOLLOWING_OPTFLOW_OFF;
 
     switch(control_mode)
     {
@@ -363,6 +355,7 @@ static void set_mode(enum FlightMode mode)
         cruise_state.locked_heading = false;
         cruise_state.lock_timer_ms = 0;
         set_target_altitude_current();
+        terrain_following_optflow.int_state = TERRAIN_FOLLOWING_OPTFLOW_ARMED;
         break;
 
     case FLY_BY_WIRE_B:

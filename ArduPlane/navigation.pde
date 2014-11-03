@@ -198,6 +198,26 @@ static void update_fbwb_speed_height(void)
 }
 
 /*
+  handle speed and height control for CRUISE mode with terrain following.
+  Elevator controls pitch, throttle controls airspeed.
+ */
+static void update_cruise_tf_speed_height(void) 
+{
+    // Set the target altitude to be right here. That way, if the controller dies, we just level out (maybe).
+    set_target_altitude_current(); 
+    
+    // Assume that we'll be maintaining the current pitch for the next Xm.
+    // Our estimated altitude at the end of this is (roughly)
+    // new_alt = curr_alt + (pitch_deg/60 * X)
+    // (ignoring angle of attack, large pitch values, etc).
+    // In actual units, new_alt(cm) = curr_alt(cm) + pitch_0.01deg / 6000 * X(cm)
+    // If X = 10m = 1000cm then just divide pitch_0.01deg by 6.
+    target_altitude.amsl_cm = current_loc.alt + (terrain_following_optflow.pitch_demand) / 6;
+    calc_throttle();
+    nav_pitch_cd = terrain_following_optflow.pitch_demand;
+}
+    
+/*
   calculate the turn angle for the next leg of the mission
  */
 static void setup_turn_angle(void)
