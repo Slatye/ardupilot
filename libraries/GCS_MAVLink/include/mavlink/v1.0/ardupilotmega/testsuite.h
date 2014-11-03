@@ -1522,13 +1522,16 @@ static void mavlink_test_aerodynamic_variables(uint8_t system_id, uint8_t compon
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
 	mavlink_aerodynamic_variables_t packet_in = {
-		17.0,45.0,73.0
+		17.0,45.0,73.0,101.0,129.0,157.0
     };
 	mavlink_aerodynamic_variables_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
         	packet1.alpha = packet_in.alpha;
         	packet1.beta = packet_in.beta;
         	packet1.airspeed = packet_in.airspeed;
+        	packet1.airspeed_acc = packet_in.airspeed_acc;
+        	packet1.temperature = packet_in.temperature;
+        	packet1.pressure = packet_in.pressure;
         
         
 
@@ -1538,12 +1541,12 @@ static void mavlink_test_aerodynamic_variables(uint8_t system_id, uint8_t compon
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_aerodynamic_variables_pack(system_id, component_id, &msg , packet1.alpha , packet1.beta , packet1.airspeed );
+	mavlink_msg_aerodynamic_variables_pack(system_id, component_id, &msg , packet1.alpha , packet1.beta , packet1.airspeed , packet1.airspeed_acc , packet1.temperature , packet1.pressure );
 	mavlink_msg_aerodynamic_variables_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_aerodynamic_variables_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.alpha , packet1.beta , packet1.airspeed );
+	mavlink_msg_aerodynamic_variables_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.alpha , packet1.beta , packet1.airspeed , packet1.airspeed_acc , packet1.temperature , packet1.pressure );
 	mavlink_msg_aerodynamic_variables_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
@@ -1556,8 +1559,140 @@ static void mavlink_test_aerodynamic_variables(uint8_t system_id, uint8_t compon
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_aerodynamic_variables_send(MAVLINK_COMM_1 , packet1.alpha , packet1.beta , packet1.airspeed );
+	mavlink_msg_aerodynamic_variables_send(MAVLINK_COMM_1 , packet1.alpha , packet1.beta , packet1.airspeed , packet1.airspeed_acc , packet1.temperature , packet1.pressure );
 	mavlink_msg_aerodynamic_variables_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+}
+
+static void mavlink_test_pitch_demand(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
+{
+	mavlink_message_t msg;
+        uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
+        uint16_t i;
+	mavlink_pitch_demand_t packet_in = {
+		17.0,17,84
+    };
+	mavlink_pitch_demand_t packet1, packet2;
+        memset(&packet1, 0, sizeof(packet1));
+        	packet1.pitch = packet_in.pitch;
+        	packet1.quality = packet_in.quality;
+        	packet1.number = packet_in.number;
+        
+        
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_pitch_demand_encode(system_id, component_id, &msg, &packet1);
+	mavlink_msg_pitch_demand_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_pitch_demand_pack(system_id, component_id, &msg , packet1.pitch , packet1.quality , packet1.number );
+	mavlink_msg_pitch_demand_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_pitch_demand_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.pitch , packet1.quality , packet1.number );
+	mavlink_msg_pitch_demand_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+        mavlink_msg_to_send_buffer(buffer, &msg);
+        for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
+        	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
+        }
+	mavlink_msg_pitch_demand_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+        
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_pitch_demand_send(MAVLINK_COMM_1 , packet1.pitch , packet1.quality , packet1.number );
+	mavlink_msg_pitch_demand_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+}
+
+static void mavlink_test_pitch_demand_ack(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
+{
+	mavlink_message_t msg;
+        uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
+        uint16_t i;
+	mavlink_pitch_demand_ack_t packet_in = {
+		5,72
+    };
+	mavlink_pitch_demand_ack_t packet1, packet2;
+        memset(&packet1, 0, sizeof(packet1));
+        	packet1.number = packet_in.number;
+        	packet1.state = packet_in.state;
+        
+        
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_pitch_demand_ack_encode(system_id, component_id, &msg, &packet1);
+	mavlink_msg_pitch_demand_ack_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_pitch_demand_ack_pack(system_id, component_id, &msg , packet1.number , packet1.state );
+	mavlink_msg_pitch_demand_ack_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_pitch_demand_ack_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.number , packet1.state );
+	mavlink_msg_pitch_demand_ack_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+        mavlink_msg_to_send_buffer(buffer, &msg);
+        for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
+        	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
+        }
+	mavlink_msg_pitch_demand_ack_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+        
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_pitch_demand_ack_send(MAVLINK_COMM_1 , packet1.number , packet1.state );
+	mavlink_msg_pitch_demand_ack_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+}
+
+static void mavlink_test_system_state(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
+{
+	mavlink_message_t msg;
+        uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
+        uint16_t i;
+	mavlink_system_state_t packet_in = {
+		5
+    };
+	mavlink_system_state_t packet1, packet2;
+        memset(&packet1, 0, sizeof(packet1));
+        	packet1.state = packet_in.state;
+        
+        
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_system_state_encode(system_id, component_id, &msg, &packet1);
+	mavlink_msg_system_state_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_system_state_pack(system_id, component_id, &msg , packet1.state );
+	mavlink_msg_system_state_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_system_state_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.state );
+	mavlink_msg_system_state_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+        mavlink_msg_to_send_buffer(buffer, &msg);
+        for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
+        	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
+        }
+	mavlink_msg_system_state_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+        
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_system_state_send(MAVLINK_COMM_1 , packet1.state );
+	mavlink_msg_system_state_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
 
@@ -1595,6 +1730,9 @@ static void mavlink_test_ardupilotmega(uint8_t system_id, uint8_t component_id, 
 	mavlink_test_camera_feedback(system_id, component_id, last_msg);
 	mavlink_test_battery2(system_id, component_id, last_msg);
 	mavlink_test_aerodynamic_variables(system_id, component_id, last_msg);
+	mavlink_test_pitch_demand(system_id, component_id, last_msg);
+	mavlink_test_pitch_demand_ack(system_id, component_id, last_msg);
+	mavlink_test_system_state(system_id, component_id, last_msg);
 }
 
 #ifdef __cplusplus

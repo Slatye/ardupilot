@@ -470,7 +470,29 @@
       <field type="float" name="alpha">Angle of attack (rad)</field>
       <field type="float" name="beta">Sideslip angle (rad)</field>
       <field type="float" name="airspeed">Airspeed (m/s)</field>
+      <field type="float" name="airspeed_acc">Airspeed acceleration (m/s/s)</field>
+      <field type="float" name="temperature">Air temperature (deg C)</field>
+      <field type="float" name="pressure">Barometric pressure (Pa)</field>
     </message>
 
+    <message name="PITCH_DEMAND" id="183">
+        <description>Demanded pitch from external controller</description>
+        <field type="float" name="pitch">Pitch demanded</field>
+        <field type="uint8_t" name="quality">Quality of the optic flow data, 255 is best, 0 means no data</field>
+        <field type="uint8_t" name="number">Sequence number for this message</field>
+    </message>
+    
+    <message name="PITCH_DEMAND_ACK" id="184">
+        <description>Acknowledgement of pitch command</description>
+        <field type="uint8_t" name="number">Sequence number for this message</field>
+        <field type="uint8_t" name="state">State of the pitch control system on the Autopilot (0 = not in pitch-controllable mode, 1 = armed, 2 = active)</field>
+    </message>
+     
+     <message name="SYSTEM_STATE" id="185">
+        <description>System state, used when two autopilots are working together</description>
+        <field type="uint8_t" name="state">System state (0 = unable to take control/will not hand over control, 1 = ready to take control/waiting to hand over control, 2 = in control, 3 = unresponsive). Can be up to four states packed into one byte. Lowest state is always the primary autopilot.</field>
+     </message>
+     
+     
      </messages>
 </mavlink>
