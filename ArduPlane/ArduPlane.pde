@@ -267,6 +267,31 @@ static bool guided_throttle_passthru;
 // external failsafe boards during baro and airspeed calibration
 static bool in_calibration;
 
+/* Terrain following
+ */
+#define TERRAIN_FOLLOWING_OPTFLOW_OFF   0 // Startup state, also set to this state when not in CRUISE mode
+#define TERRAIN_FOLLOWING_OPTFLOW_ARMED 1 // Ready to activate. Only applied in CRUISE mode. TF will be activated when Atom requests it.
+#define TERRAIN_FOLLOWING_OPTFLOW_ON    2 // Active now.
+#define TERRAIN_FOLLOWING_OPTFLOW_SYSTEM_DISARMED 3
+#define TERRAIN_FOLLOWING_OPTFLOW_EXT_UNAVAILABLE 0
+#define TERRAIN_FOLLOWING_OPTFLOW_EXT_READY 1
+#define TERRAIN_FOLLOWING_OPTFLOW_EXT_ON 2
+#define TERRAIN_FOLLOWING_OPTFLOW_EXT_ERROR 3
+static struct {
+    uint8_t int_state;
+    uint8_t ext_state;
+    uint8_t sequence;
+    uint32_t timestamp; // Last control data. 1s loss = abort immediately
+    uint32_t heartbeat; // Last communication of any sort. 5s loss = error
+    int32_t pitch_demand;
+} terrain_following_optflow = {
+    int_state : TERRAIN_FOLLOWING_OPTFLOW_SYSTEM_DISARMED,
+    ext_state : TERRAIN_FOLLOWING_OPTFLOW_EXT_ERROR,
+    sequence  : 0,
+    timestamp : 0,
+    heartbeat : 0,
+    pitch_demand : 0
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // GCS selection
@@ -1384,7 +1409,26 @@ static void update_flight_mode(void)
         } else {
             calc_nav_roll();
         }
-        update_fbwb_speed_height();
+        
+        // If terrain following is on but we haven't gotten a message for a while,
+        // switch to AUTO.
+        // If terrain following is off but we're in cruise mode, we're probably just
+        // waiting for the Atom. Continue in FBWB mode.
+        if (terrain_following_optflow.int_state == TERRAIN_FOLLOWING_OPTFLOW_ON) {
+            if (millis() - terrain_following_optflow.timestamp > 1000) {
+                terrain_following_optflow.ext_state = TERRAIN_FOLLOWING_OPTFLOW_EXT_ERROR; // Set the flag to indicate that it's failed.
+                // it's all gone bad, switch to auto mode.
+                set_mode(AUTO);
+            } else {
+                update_cruise_tf_speed_height();
+            }
+        } else if ((terrain_following_optflow.ext_state == TERRAIN_FOLLOWING_OPTFLOW_EXT_ERROR) ||
+            (terrain_following_optflow.ext_state == TERRAIN_FOLLOWING_OPTFLOW_EXT_UNAVAILABLE)) {
+                // If the Atom is actually unable to take control, go back to AUTO mode until it's better.
+                set_mode(AUTO);
+        } else {
+            update_fbwb_speed_height();
+        }
         break;
         
     case STABILIZE:
