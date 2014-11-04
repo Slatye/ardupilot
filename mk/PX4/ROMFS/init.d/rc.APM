@@ -175,7 +175,7 @@ else
 fi
 
 echo "Setting FMU mode_serial_pwmin"
-fmu mode_serial
+fmu mode_serial_pwmin
 
 
 
