@@ -123,7 +123,7 @@ else
         tone_alarm MSPAA
     else
 	echo "Failed to upgrade PX4IO firmware"
-        tone_alarm MNGGG
+        tone_alarm MNGGGGGG
     fi
     sleep 1
     if px4io start norc
