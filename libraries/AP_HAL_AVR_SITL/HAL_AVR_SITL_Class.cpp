@@ -35,6 +35,7 @@ static Empty::EmptyGPIO emptyGPIO;
 static Empty::EmptySemaphore emptyI2Csemaphore;
 static Empty::EmptyI2CDriver emptyI2C(&emptyI2Csemaphore);
 static Empty::EmptySPIDeviceManager emptySPI;
+static Empty::EmptyPWMInput emptyPWMInput;
 
 static SITLUARTDriver sitlUart0Driver(0, &sitlState);
 static SITLUARTDriver sitlUart1Driver(1, &sitlState);
@@ -46,7 +47,7 @@ static SITLUtil utilInstance;
 
 HAL_AVR_SITL::HAL_AVR_SITL() :
     AP_HAL::HAL(
-	    &sitlUart0Driver,  /* uartA */
+        &sitlUart0Driver,  /* uartA */
         &sitlUart1Driver,  /* uartB */
         &sitlUart2Driver,  /* uartC */
         &sitlUart3Driver,  /* uartD */
@@ -58,6 +59,7 @@ HAL_AVR_SITL::HAL_AVR_SITL() :
         &sitlUart0Driver, /* console */
         &emptyGPIO, /* gpio */
         &sitlRCInput,  /* rcinput */
+        &emptyPWMInput, /* pwm input */
         &sitlRCOutput, /* rcoutput */
         &sitlScheduler, /* scheduler */
         &utilInstance), /* util */

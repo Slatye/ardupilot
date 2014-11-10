@@ -46,6 +46,19 @@ static void zero_airspeed(void)
     gcs_send_text_P(SEVERITY_LOW,PSTR("zero airspeed calibrated"));
 }
 
+/*
+  read the angle of attack sensor
+*/
+static void read_aoa(void) 
+{
+    if (aoa.enabled()) {
+        aoa.read();
+        if (should_log(MASK_LOG_IMU)) {
+            Log_Write_AOA();
+        }
+    }
+}
+
 // read_battery - reads battery voltage and current and invokes failsafe
 // should be called at 10hz
 static void read_battery(void)
