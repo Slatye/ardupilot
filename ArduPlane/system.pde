@@ -87,6 +87,12 @@ static void init_ardupilot()
     //
     load_parameters();
 
+#if CONFIG_HAL_BOARD == HAL_BOARD_PX4
+    // this must be before BoardConfig.init() so if
+    // BRD_SAFETYENABLE==0 then we don't have safety off yet
+    setup_failsafe_mixing();
+#endif
+
     BoardConfig.init();
 
     // allow servo set on all channels except first 4
@@ -146,10 +152,6 @@ static void init_ardupilot()
     }
 #endif
 
-    // Register mavlink_delay_cb, which will run anytime you have
-    // more than 5ms remaining in your call to hal.scheduler->delay
-    hal.scheduler->register_delay_callback(mavlink_delay_cb, 5);
-
 #if CONFIG_HAL_BOARD == HAL_BOARD_APM1
     apm1_adc.Init();      // APM ADC library initialization
 #endif
@@ -168,6 +170,10 @@ static void init_ardupilot()
             ahrs.set_compass(&compass);
         }
     }
+
+    // Register mavlink_delay_cb, which will run anytime you have
+    // more than 5ms remaining in your call to hal.scheduler->delay
+    hal.scheduler->register_delay_callback(mavlink_delay_cb, 5);
 
     // give AHRS the airspeed sensor
     ahrs.set_airspeed(&airspeed);
@@ -505,7 +511,7 @@ static void startup_INS_ground(bool do_accel_init)
         // the barometer begins updating when we get the first
         // HIL_STATE message
         gcs_send_text_P(SEVERITY_LOW, PSTR("Waiting for first HIL_STATE message"));
-        delay(1000);
+        hal.scheduler->delay(1000);
     }
     
     // set INS to HIL mode

@@ -1,12 +1,5 @@
 // -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
- #if CONFIG_SONAR == ENABLED
-static void init_sonar(void)
-{
-    sonar.init();
-}
-#endif
-
 static void init_barometer(bool full_calibration)
 {
     gcs_send_text_P(SEVERITY_LOW, PSTR("Calibrating barometer"));
@@ -15,6 +8,8 @@ static void init_barometer(bool full_calibration)
     }else{
         barometer.update_calibration();
     }
+    // reset glitch protection to use new baro alt
+    baro_glitch.reset();
     gcs_send_text_P(SEVERITY_LOW, PSTR("barometer calibration complete"));
 }
 
@@ -40,6 +35,13 @@ static void read_barometer(void)
         AP_Notify::flags.baro_glitching = report_baro_glitch;
     }
 }
+
+#if CONFIG_SONAR == ENABLED
+static void init_sonar(void)
+{
+   sonar.init();
+}
+#endif
 
 // return sonar altitude in centimeters
 static int16_t read_sonar(void)
@@ -77,6 +79,7 @@ static int16_t read_sonar(void)
 #endif
 }
 
+// initialise compass
 static void init_compass()
 {
     if (!compass.init() || !compass.read()) {
@@ -88,6 +91,7 @@ static void init_compass()
     ahrs.set_compass(&compass);
 }
 
+// initialise optical flow sensor
 static void init_optflow()
 {
 #if OPTFLOW == ENABLED
