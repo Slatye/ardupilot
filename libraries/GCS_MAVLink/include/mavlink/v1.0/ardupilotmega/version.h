@@ -1,11 +1,11 @@
 /** @file
  *	@brief MAVLink comm protocol built from ardupilotmega.xml
- *	@see http://mavlink.org
+ *	@see http://pixhawk.ethz.ch/software/mavlink
  */
 #ifndef MAVLINK_VERSION_H
 #define MAVLINK_VERSION_H
 
-#define MAVLINK_BUILD_DATE "Tue Nov 25 10:42:23 2014"
+#define MAVLINK_BUILD_DATE "Wed Nov 26 14:09:56 2014"
 #define MAVLINK_WIRE_PROTOCOL_VERSION "1.0"
 #define MAVLINK_MAX_DIALECT_PAYLOAD_SIZE 255
  
